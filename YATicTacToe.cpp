@@ -7,6 +7,8 @@
 using namespace std;
 
 char board[3][3];
+int hplmx; // human player last move x
+int hplmy; // human player last move y
 
 void initBoard(void);
 void displayBoard(int);
@@ -68,15 +70,22 @@ void getPlayer1Move() {
 		if (m < 4)
 		{
 			board[0][--m] = 'x';
+			hplmx = 0;
+			hplmy = m;
 		}
 		else if (m < 7)
 		{
 			board[1][--m - 3] = 'x';
+			hplmx = 1;
+			hplmy = m-3;
 		}
 		else
 		{
 			board[2][--m - 6] = 'x';
+			hplmx = 2;
+			hplmy = m - 6;
 		}
+		
 	}
 
 	displayBoard(1);
@@ -128,9 +137,9 @@ void showWinScreen(int whichPlayerWon)
 {
 	for (int i = 0; i < 5; i++)
 	{
-		cout << "Player " << whichPlayerWon << " won !!! ";
+		cout << "\nPlayer " << whichPlayerWon << " won !!! ";
 		for (double j = 0; j < 1000000; j += 0.01);
-		system("cls");
+		//system("cls");
 		for (double j = 0; j < 1000000; j += 0.01);
 	}
 	exit(0);
@@ -251,12 +260,31 @@ int getCompMove()
 
 	for (i = 0; i < 3; i++)
 	{
+		if (board[i][hplmy] != 'x' && board[i][hplmy] != 'o')
+		{
+			board[i][hplmy] = 'o';
+			return 4;
+		}
+	}
+
+	for (i = 0; i < 3; i++)
+	{
+		if (board[hplmx][i] != 'x' && board[hplmx][i] != 'o')
+		{
+			board[hplmx][i] = 'o';
+			return 4;
+		}
+	}
+
+
+	for (i = 0; i < 3; i++)
+	{
 		for (int j = 0; j < 3; j++)
 		{
 			if (board[i][j] != 'x' && board[i][j] != 'o')
 			{
 				board[i][j] = 'o';
-				return 4;
+				return 3;
 			 }
 		}
 	}
