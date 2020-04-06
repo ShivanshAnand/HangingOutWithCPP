@@ -9,10 +9,10 @@ using namespace std;
 char board[3][3];
 
 void initBoard(void);
-void displayBoard(void);
+void displayBoard(int);
 void getPlayer1Move(void);
 void getPlayer2Move(void);
-void getCompMove(void);
+int getCompMove(void);
 void showWinScreen(int);
 bool calcWin(int);
 
@@ -48,9 +48,14 @@ void displayBoard(int playerWhichMovedLast)
 	}
 
 	if (playerWhichMovedLast == 1)
-		getPlayer2Move();
+	{
+		getCompMove();
+		displayBoard(2);
+	}
 	else
+	{
 		getPlayer1Move();
+	}
 }
 
 void getPlayer1Move() {
@@ -139,7 +144,7 @@ void menuScreen()
 	cout << "\t  **    **     **     **           **           **     \n";
 	cout << "\t **    **       **    **           **           **     \n";
 
-	cout << "\t\tYet Another Tic Tac Toe Game\n\t\t   made by Shivansh Anand\n\n\tPress any natural number to start, 0 to exit";
+	cout << "\t\tYet Another Tic Tac Toe Game\n\t\tmade by Shivansh Anand\n\n\t\t1. Human VS. Human\n\t\t2. Human VS. Computer\n\t\t3. Any other integer to exit";
 	int choice;
 	cin >> choice;
 	if (choice > 0)
@@ -153,10 +158,116 @@ void menuScreen()
 	}
 }
 
+
+int getCompMove()
+{
+	int i;
+	int count = 0;
+	for (i = 0; i < 3; i++)
+	{
+		if (board[i][0] == 'x')
+			count++;
+		if (board[i][1] == 'x')
+			count++;
+		if (board[i][2] == 'x')
+			count++;
+
+		if (count == 2)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (board[i][j] != 'x' && board[i][j] != 'o')
+				{
+					board[i][j] = 'o';
+					return 5;
+				}
+			}
+		}
+		count = 0;
+	}
+	
+
+	for (i = 0; i < 3; i++)
+	{
+		if (board[0][i] == 'x')
+			count++;
+		if (board[1][i] == 'x')
+			count++;
+		if (board[2][i] == 'x')
+			count++;
+
+		if (count == 2)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (board[j][i] != 'x' && board[j][i] != 'o')
+				{
+					board[j][i] = 'o';
+					return 5;
+				}
+			}
+		}
+		count = 0;
+	}
+
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (board[i][i] == 'x')
+			count++;
+		if (count == 2)
+		{
+			for (i = 0; i < 3; i++)
+			{
+				if (board[i][i] != 'x' && board[i][i] != 'o')
+				{
+					board[i][i] = 'o';
+					return 5;
+				}
+			}
+		}
+	}
+
+	count = 0;
+
+	for (int i = 2; i >=0; i--)
+	{
+		if (board[i][i] == 'x')
+			count++;
+		if (count == 2)
+		{
+			for (i = 0; i < 3; i++)
+			{
+				if (board[i][i] != 'x' && board[i][i] != 'o')
+				{
+					board[i][i] = 'o';
+					return 5;
+				}
+			}
+		}
+	}
+
+	count = 0;
+
+	for (i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (board[i][j] != 'x' && board[i][j] != 'o')
+			{
+				board[i][j] = 'o';
+				return 4;
+			 }
+		}
+	}
+
+	return -1;
+}
+
 int main()
 {
-	menuScreen();
-	//initBoard();
-	//displayBoard(2);
+	//menuScreen();
+	initBoard();
+	displayBoard(2);
 	return 0;
 }
