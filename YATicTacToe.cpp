@@ -1,6 +1,8 @@
-/* Traditional Tic-Tac-Toe program
-    --- Made by Shivansh Anand
-*/
+/*traditional tic-tac-toe game
+ * with ASCII art
+ * made by Shivansh Anand
+ */
+
 #include <iostream>
 using namespace std;
 
@@ -129,9 +131,32 @@ void showWinScreen(int whichPlayerWon)
 	exit(0);
 }
 
+void menuScreen()
+{
+	cout << "\t***  ***   ***     ********     ********     ********  \n";
+	cout << "\t **  **   ** **   **********   **********   ********** \n";
+	cout << "\t  ****   *******      **           **           **     \n";
+	cout << "\t  **    **     **     **           **           **     \n";
+	cout << "\t **    **       **    **           **           **     \n";
+
+	cout << "\t\tYet Another Tic Tac Toe Game\n\t\t   made by Shivansh Anand\n\n\tPress any natural number to start, 0 to exit";
+	int choice;
+	cin >> choice;
+	if (choice > 0)
+	{
+		initBoard();
+		displayBoard(2);
+	}
+	else
+	{
+		exit(0);
+	}
+}
+
 int main()
 {
-	initBoard();
-	displayBoard(2);
+	menuScreen();
+	//initBoard();
+	//displayBoard(2);
 	return 0;
 }
