@@ -12,17 +12,19 @@ int hplmx; // human player last move x
 int hplmy; // human player last move y
 int choice;
 int won = 0;
+int con = 1;
 
 void initBoard(void);
 void displayBoard(int);
 void getPlayer1Move(void);
 void getPlayer2Move(void);
 void getCompMove(void);
-int yenniferAmb(void);
+int avgBrain(void);
 void printCenteredMenu(char[], int, int);
 void delay(int);
 void showWinScreen(int);
 bool calcWin(int);
+bool matchDraw(void);
 void menuScreen(void);
 
 
@@ -68,15 +70,10 @@ void menuScreen()
 	int i;
 
 	system("cls");
-	int delayCounter = 2000000;
-	double incValue = 1;
-	int step = 50000;
 	for (i = 0; i < 5; i++)
 	{
 		cout << "\t" << mainLogo[i] << "\n";
-		delay(delayCounter);
-		delayCounter -= incValue * step;
-		incValue += 1;
+		delay(1250000);
 	}
 
 	int spLen = (int)((len - strlen(msgs[0])) / 2);
@@ -86,9 +83,7 @@ void menuScreen()
 		if (i == 0 || i == 2)
 			cout << "\n";
 		printCenteredMenu(msgs[i], len, 1);
-		delay(delayCounter);
-		delayCounter -= incValue * step;
-		incValue += 1;
+		delay(1000000);
 	}
 
 	cin >> choice;
@@ -135,15 +130,36 @@ void displayBoard(int playerWhichMovedLast)
 			cout << "\t-----\n";
 	}
 
-	if (won)
-	{
-		showWinScreen(playerWhichMovedLast);
-	}
-
-	if (calcWin(playerWhichMovedLast)) {
+	if (calcWin(playerWhichMovedLast) && won == 0) {
 		won = 1;
 		displayBoard(playerWhichMovedLast);
 	}
+
+
+	if (won)
+	{
+		if (choice == 1)
+		{
+			showWinScreen(playerWhichMovedLast);
+		}
+		else
+		{
+			if (playerWhichMovedLast == 1)
+			{
+				showWinScreen(playerWhichMovedLast);
+			}
+			else
+			{
+				showWinScreen(3);
+			}
+		}
+	}
+
+	if (matchDraw())
+	{
+		showWinScreen(4);
+	}
+
 
 	if (playerWhichMovedLast == 1)
 	{
@@ -164,6 +180,20 @@ void displayBoard(int playerWhichMovedLast)
 	{
 		cout << "Game Over !";
 	}
+}
+
+bool matchDraw()
+{
+	int i, j;
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			if (board[i][j] < 58)
+				return false;
+		}
+	}
+	return true;
 }
 
 void getPlayer1Move() {
@@ -222,14 +252,14 @@ void getPlayer2Move() {
 
 void getCompMove()
 {
-	yenniferAmb();
+	avgBrain();
 	displayBoard(2);
 }
 
 
-int yenniferAmb()
+int avgBrain()
 {
-	int i;
+	int i, j;
 	int count = 0;
 	for (i = 0; i < 3; i++)
 	{
@@ -242,7 +272,7 @@ int yenniferAmb()
 
 		if (count == 2)
 		{
-			for (int j = 0; j < 3; j++)
+			for (j = 0; j < 3; j++)
 			{
 				if (board[i][j] != 'x' && board[i][j] != 'o')
 				{
@@ -253,7 +283,6 @@ int yenniferAmb()
 		}
 		count = 0;
 	}
-
 
 	for (i = 0; i < 3; i++)
 	{
@@ -266,7 +295,7 @@ int yenniferAmb()
 
 		if (count == 2)
 		{
-			for (int j = 0; j < 3; j++)
+			for (j = 0; j < 3; j++)
 			{
 				if (board[j][i] != 'x' && board[j][i] != 'o')
 				{
@@ -275,46 +304,44 @@ int yenniferAmb()
 				}
 			}
 		}
+
 		count = 0;
 	}
 
-
-	for (int i = 0; i < 3; i++)
+	for (i = 0; i < 3; i++)
 	{
 		if (board[i][i] == 'x')
 			count++;
 		if (count == 2)
 		{
-			for (i = 0; i < 3; i++)
+			for (j = 0; j < 3; j++)
 			{
-				if (board[i][i] != 'x' && board[i][i] != 'o')
+				if (board[j][j] != 'x' && board[j][j] != 'o')
 				{
-					board[i][i] = 'o';
+					board[j][j] = 'o';
 					return 5;
 				}
 			}
 		}
 	}
-
 	count = 0;
 
-	for (int i = 2; i >= 0; i--)
+	for (i = 0; i < 3; i++)
 	{
-		if (board[i][i] == 'x')
+		if (board[i][2-i] == 'x')
 			count++;
 		if (count == 2)
 		{
-			for (i = 0; i < 3; i++)
+			for (j = 0; j < 3; j++)
 			{
-				if (board[i][i] != 'x' && board[i][i] != 'o')
+				if (board[j][j] != 'x' && board[j][j] != 'o')
 				{
-					board[i][i] = 'o';
+					board[j][j] = 'o';
 					return 5;
 				}
 			}
 		}
 	}
-
 	count = 0;
 
 	for (i = 0; i < 3; i++)
@@ -335,10 +362,9 @@ int yenniferAmb()
 		}
 	}
 
-
 	for (i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < 3; j++)
+		for (j = 0; j < 3; j++)
 		{
 			if (board[i][j] != 'x' && board[i][j] != 'o')
 			{
@@ -353,18 +379,20 @@ int yenniferAmb()
 
 bool calcWin(int player)
 {
+	player--;
+	char arr[] = { 'x', 'o' };
 	for (int i = 0; i < 3; i++)
-		if (board[i][0] == board[i][1] && board[i][1] == board[i][2])
+		if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && arr[player] == board[i][2])
 			return true;
 
 	for (int i = 0; i < 3; i++)
-		if (board[0][i] == board[1][i] && board[1][i] == board[2][i])
+		if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && arr[player] == board[2][i])
 			return true;
 
-	if (board[0][0] == board[1][1] && board[1][1] == board[2][2])
+	if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && arr[player] == board[2][2])
 		return true;
 
-	if (board[0][1] == board[1][1] && board[1][1] == board[2][0])
+	if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && arr[player] == board[2][0])
 		return true;
 
 	return false;
@@ -375,12 +403,11 @@ void showWinScreen(int whichPlayerWon)
 	char msgs[][50] = {
 		"Player 1 won !!!",
 		"Player 2 won !!!",
-		"Computer won !!!"
+		"Computer won !!!",
+		"It's a draw ;|"
 	};
-
+	
 	--whichPlayerWon;
-	if (choice == 2)
-		whichPlayerWon++;
 
 	int i;
 
@@ -406,6 +433,7 @@ void showWinScreen(int whichPlayerWon)
 }
 
 int main()
+
 {
 	menuScreen();
 	return 0;
